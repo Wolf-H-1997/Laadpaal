@@ -5,6 +5,8 @@ import seaborn as sns
 import numpy as np
 import plotly.express as px
 from IPython.display import Image
+from PIL import Image
+
 
 
 def main():
