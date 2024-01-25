@@ -235,7 +235,7 @@ def main():
         plt.xlabel('Type')
         plt.xticks(rotation =45)
         plt.ylabel('Count')
-        st.pyplot(plt)
+        st.plotly_chart(plt)
 
 
         #PLOT 5
@@ -269,7 +269,7 @@ def main():
         plt.xlabel('Laadduur (minuten)')
         plt.ylabel('Aantal laadsessies')
         plt.legend(title='Seizoen')
-        st.pyplot(fig)
+        st.plotly_chart(fig)
 
         st.markdown("""
         Het onderzoeken van het laadgedrag over de seizoenen onthult interessante inzichten. In de lente is er de hoogste activiteit, wat suggereert dat gebruikers meer geneigd zijn om hun elektrische voertuigen op te laden bij aangenamer weer. Dit patroon blijft grotendeels consistent in de zomer, met een merkbare daling in de winter.
