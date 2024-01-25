@@ -235,7 +235,7 @@ def main():
         plt.xlabel('Type')
         plt.xticks(rotation =45)
         plt.ylabel('Count')
-        st.plotly_chart(plt)
+        st.pyplot(plt)
 
 
         #PLOT 5
