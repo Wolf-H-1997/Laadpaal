@@ -6,6 +6,19 @@ import numpy as np
 import plotly.express as px
 from IPython.display import Image
 from PIL import Image
+import plotly.express as px
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from prophet import Prophet
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from statsmodels.tsa.arima.model import ARIMA
+from pmdarima import auto_arima
+from pmdarima.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import pmdarima as pm
+
 
 
 
@@ -234,55 +247,154 @@ def main():
         plt.title('Count Plot voor laadpalen')
         plt.xlabel('Type')
         plt.xticks(rotation =45)
-        plt.ylabel('Count')
-        st.plotly_chart(fig)
+        plt.ylabel('laadsessies')
+        st.pyplot(plt)
 
 
-        #PLOT 5
-        st.markdown("**Profiel 3: Seizoensgebonden laden**")
-        df['Season'] = df['Start Time'].dt.month.map({
-        1: 'Winter', 2: 'Winter', 3: 'Lente',
-        4: 'Lente', 5: 'Lente', 6: 'Zomer',
-        7: 'Zomer', 8: 'Zomer', 9: 'Herfst',
-        10: 'Herfst', 11: 'Herfst', 12: 'Winter'
-        })
-
-        # Voeg een multi-select widget toe voor seizoenen
-        selected_seasons = st.multiselect('Selecteer seizoen(en)', df['Season'].unique())
-
-        fig, ax = plt.subplots(figsize=(18, 12))
-
-        season_colors = {
-        'Winter': 'blue',
-        'Lente': 'green',
-        'Zomer': 'red',
-        'Herfst': 'orange'
-        }
-
-        if selected_seasons:
-            for season in selected_seasons:
-                season_charging = df[df['Season'] == season]
-                plt.hist(season_charging['Duration (min)'], bins=30, alpha=0.7, label=season)
-        
-
-        plt.title('Histogram van Laadduren per Seizoen')
-        plt.xlabel('Laadduur (minuten)')
-        plt.ylabel('Aantal laadsessies')
-        plt.legend(title='Seizoen')
-        st.pyplot(fig)
-
-        st.markdown("""
-        Het onderzoeken van het laadgedrag over de seizoenen onthult interessante inzichten. In de lente is er de hoogste activiteit, wat suggereert dat gebruikers meer geneigd zijn om hun elektrische voertuigen op te laden bij aangenamer weer. Dit patroon blijft grotendeels consistent in de zomer, met een merkbare daling in de winter.
-
-        De seizoensgebonden variatie kan beïnvloed worden door verschillende factoren, waaronder temperatuur, daglichturen en wegomstandigheden. In warmer weer zijn mensen mogelijk meer bereid om hun elektrische voertuigen te gebruiken en op te laden, terwijl kouder weer en verminderd daglicht de laadactiviteit kunnen verminderen.
-        """)
+       
     
 
     #PAGINA 5 VOORSPELLING
     if choice == "Voorspelling":
         st.title("Data voorspellen")
-        st.markdown("xx")
+        st.markdown("Hier een arima plot met blablaablaablaablaaaa")
+        pw_dag = pd.read_csv('pw_dag')
+        pw_uur = pd.read_csv('pw_uur')
+        pw_dag.set_index('start', inplace=True)
+        pw_uur.set_index('start', inplace=True)
+        pw_dag_diff = pw_dag.diff().dropna()
 
+
+        
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.plot(pw_dag_diff, label='TotalActivePowW')
+        ax.set_title('Totaal Power watt Total Over Time')
+        ax.set_xlabel('Date')
+        ax.set_xticks(range(0, len(pw_dag_diff), 5))
+        ax.set_xticklabels(pw_dag_diff.index[::5], rotation=45, ha='right')
+        ax.set_ylabel('TotalActivePowW')
+        ax.legend()
+        st.pyplot(fig)
+
+        # Decompose the time series into trend, seasonality, and residual components
+        result = seasonal_decompose(pw_dag_diff, model='additive', period=7)
+        fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 8), sharex=True)
+
+        result.trend.plot(ax=ax1)
+        ax1.set_title('Trend Component')
+        result.seasonal.plot(ax=ax2)
+        ax2.set_title('Seasonal Component')
+        result.resid.plot(ax=ax3)
+        ax3.set_title('Residual Component')
+        result.observed.plot(ax=ax4)
+        ax4.set_title('Observed Data')
+
+        plt.suptitle('Decomposition of TotalActivePowW Time Series', y=1.02)
+        plt.tight_layout()
+        st.pyplot(fig)
+
+        # ADF TEST
+        adf_result = adfuller(pw_dag_diff)
+        st.write(f'ADF Statistic: {adf_result[0]}')
+        st.write(f'p-value: {adf_result[1]}')
+        st.write('Critical Values:')
+        for key, value in adf_result[4].items():
+            st.write(f'   {key}: {value}')
+
+        # Plot ACF and PACF for determining the order of the ARIMA model
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+        plot_acf(pw_dag_diff, ax=ax1, lags=20)
+        plot_pacf(pw_dag_diff, ax=ax2, lags=20)
+        plt.suptitle('ACF and PACF for TotalActivePowerW Time Series')
+        st.pyplot(fig)
+        st.divider()
+        
+        st.markdown('Het auto arima model geeft Best model:  ARIMA(4,0,2)(2,0,1)[7]')
+        y = pw_dag_diff.sort_index()
+
+        # Split the data into train and test data with a size of 0.8
+        train_size = int(len(y) * 0.8)
+        train, test = y[:train_size], y[train_size:]
+
+        # Fit the ARIMA model with auto_arima parameters (these are calculated automatically)
+        model = pm.auto_arima(train, seasonal=True, m=7, trace=True, suppress_warnings=True,
+                              stepwise=True, maxiter=10, information_criterion='aic')
+
+        # Make predictions
+        predictions, conf_int = model.predict(n_periods=len(test), return_conf_int=True)
+
+        # Calculate the MSE
+        mse = mean_squared_error(test, predictions)
+        st.write(f'Mean Squared Error: {mse}')
+
+        # Make a plot with training data, test data, and predictions
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.plot(train.index, train, label='Training Data')
+        ax.plot(test.index, test, label='Test Data')
+        ax.plot(test.index, predictions, label='Predictions', linestyle='--')
+        ax.fill_between(test.index, conf_int[:, 0], conf_int[:, 1], color='gray', alpha=0.2, label='Confidence Interval')
+        ax.set_title('ARIMA Model Prediction')
+        ax.set_xlabel('Date')
+        ax.set_ylabel('Total Power W')
+        ax.legend()
+
+        st.pyplot(fig)
+        st.divider()
+        pw_dag_diff.index = pd.to_datetime(pw_dag_diff.index)
+
+        fit = ARIMA(pw_dag_diff, order=(4, 0, 2), seasonal_order=(2, 0, 1, 7)).fit()
+
+        # Plotting
+        fig, ax = plt.subplots(figsize=(10, 6))
+        pw_dag_diff.plot(marker='o', label='Actual Data', ax=ax)
+        fit.fittedvalues.plot(style='--', label='Fitted Values', ax=ax)
+
+        # Forecast
+        forecast_steps = 21
+        forecast_index = pd.date_range(start=pw_dag_diff.index[-1], periods=forecast_steps + 1, freq='D')[1:]
+        forecast = fit.get_forecast(steps=forecast_steps)
+        forecast_series = forecast.predicted_mean
+        forecast_series.index = forecast_index
+        forecast_series.plot(style='--', color='C1', label='ARIMA Forecast', ax=ax)
+
+        ax.legend()
+
+        st.pyplot(fig)
+        st.divider()
+        st.markdown('### Prophet voorspel model')
+        df_prophet = pw_dag.reset_index()
+        df_prophet.rename(columns={'start' : 'ds', 'v' : 'y'}, inplace =True)
+        df_prophet = df_prophet.dropna()
+        df_prophet = df_prophet.astype(object)
+        df_prophet['ds'] = pd.to_datetime(df_prophet['ds'])
+        df_prophet['y'] = df_prophet['y'].astype(float)
+        model = Prophet()
+        model.fit(df_prophet)
+        future = model.make_future_dataframe(periods=21)  
+
+        forecast = model.predict(future)
+
+        fig = model.plot(forecast)
+        st.pyplot(fig)
+        fig2 = model.plot_components(forecast)
+        st.pyplot(fig2)
+        st.divider()
+        df_prophet = pw_uur.reset_index()
+        df_prophet.rename(columns={'start' : 'ds', 'v' : 'y'}, inplace =True)
+        df_prophet = df_prophet.dropna()
+        df_prophet = df_prophet.astype(object)
+        df_prophet['ds'] = pd.to_datetime(df_prophet['ds'])
+        df_prophet['y'] = df_prophet['y'].astype(float)
+        model = Prophet()
+        model.fit(df_prophet)
+        future = model.make_future_dataframe(periods=21)
+
+        forecast = model.predict(future)
+        fig = model.plot(forecast)
+        st.pyplot(fig)
+        fig3 = model.plot_components(forecast)
+        st.markdown('# Nu per uur')
+        st.pyplot(fig3)
     #PAGINA 6 CONCLUSIE
     if choice == "Conclusie":
         st.title("Conclusie")
