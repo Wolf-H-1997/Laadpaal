@@ -166,7 +166,7 @@ def main():
         st.markdown("**Profiel 1: Laden per dagdeel**")
         df= pd.read_csv('allelaadpalen')
         fig = px.bar(df, x='ChargingPeriod', title='Charging Period Distribution')
-        st.pyplot(fig)
+        st.plotly_chart(fig)
 
         st.markdown("""
         De plot laat zien dat er een duidelijk patroon te zien is over het laadgedrag van elektrische auto bestuurders. Over het algemeen wordt in de ochtenduren aanzienlijk meer opgeladen, wat resulteert in een piek in laadactiviteit gedurende deze periode.
@@ -177,22 +177,22 @@ def main():
         #PLOT 2
         st.markdown("**Profiel 2: Verschillende dagen**")
         fig = px.bar(df, x='Day', title='Charging Period days')
-        st.pyplot(fig)
+        st.plotly_chart(fig)
         
         #PLOT 3
         st.title('Interactive Scatter Plot')
 
         # Create a scatter plot with dropdown menu for variable selection
-        fig = px.scatter(concatenated_laadpalen, x='Start Time', y='3PhaseActivePowW', color='type',
+        fig = px.scatter(df, x='Start Time', y='3PhaseActivePowW', color='type',
                      title='Scatter Plot', marginal_x='histogram')
 
         fig.update_layout(
             updatemenus=[
             {
                 'buttons': [
-                    {'method': 'update', 'label': '3PhaseActivePowW', 'args': [{'y': [concatenated_laadpalen['3PhaseActivePowW']]}]},
-                    {'method': 'update', 'label': 'L1CurrentA', 'args': [{'y': [concatenated_laadpalen['L1CurrentA']]}]},
-                    {'method': 'update', 'label': 'Duration (min)', 'args': [{'y': [concatenated_laadpalen['Duration (min)']]}]},
+                    {'method': 'update', 'label': '3PhaseActivePowW', 'args': [{'y': [df['3PhaseActivePowW']]}]},
+                    {'method': 'update', 'label': 'L1CurrentA', 'args': [{'y': [df['L1CurrentA']]}]},
+                    {'method': 'update', 'label': 'Duration (min)', 'args': [{'y': [df['Duration (min)']]}]},
                     ],
                     'direction': 'down',
                     'showactive': True,
@@ -205,18 +205,18 @@ def main():
         st.plotly_chart(fig)
         #PLOT4
        
-        fig = px.scatter(concatenated_laadpalen, x='Start Time', y='L1CurrentA', color='type',
+        fig = px.scatter(df, x='Start Time', y='L1CurrentA', color='type',
                          title='Scatter Plot')
 
         fig.update_layout(
             updatemenus=[
                 {
                     'buttons': [
-                        {'method': 'update', 'label': 'L1CurrentA', 'args': [{'y': [concatenated_laadpalen['L1CurrentA']]}]},
-                        {'method': 'update', 'label': 'L2CurrentA', 'args': [{'y': [concatenated_laadpalen['L2CurrentA']]}]},
-                        {'method': 'update', 'label': 'L3CurrentA', 'args': [{'y': [concatenated_laadpalen['L3CurrentA']]}]},
-                        {'method': 'update', 'label': 'maxAppliedChargingCurrentA', 'args': [{'y': [concatenated_laadpalen['maxAppliedChargingCurrentA']]}]},
-                        {'method': 'update', 'label': 'maxChargingCurrentA', 'args': [{'y': [concatenated_laadpalen['maxChargingCurrentA']]}]},
+                        {'method': 'update', 'label': 'L1CurrentA', 'args': [{'y': [df['L1CurrentA']]}]},
+                        {'method': 'update', 'label': 'L2CurrentA', 'args': [{'y': [df['L2CurrentA']]}]},
+                        {'method': 'update', 'label': 'L3CurrentA', 'args': [{'y': [df['L3CurrentA']]}]},
+                        {'method': 'update', 'label': 'maxAppliedChargingCurrentA', 'args': [{'y': [df['maxAppliedChargingCurrentA']]}]},
+                        {'method': 'update', 'label': 'maxChargingCurrentA', 'args': [{'y': [df['maxChargingCurrentA']]}]},
                     ],
                     'direction': 'down',
                     'showactive': True,
@@ -230,12 +230,12 @@ def main():
         st.plotly_chart(fig)
         #PLOT 6
         plt.figure(figsize=(10, 6))
-        sns.countplot(x='type', data=prob, palette='viridis')
+        sns.countplot(x='type', data=df, palette='viridis')
         plt.title('Count Plot voor laadpalen')
         plt.xlabel('Type')
         plt.xticks(rotation =45)
         plt.ylabel('Count')
-        st.pyplot(plt)
+        st.plotly_chart(fig)
 
 
         #PLOT 5
@@ -269,7 +269,7 @@ def main():
         plt.xlabel('Laadduur (minuten)')
         plt.ylabel('Aantal laadsessies')
         plt.legend(title='Seizoen')
-        st.plotly_chart(fig)
+        st.pyplot(fig)
 
         st.markdown("""
         Het onderzoeken van het laadgedrag over de seizoenen onthult interessante inzichten. In de lente is er de hoogste activiteit, wat suggereert dat gebruikers meer geneigd zijn om hun elektrische voertuigen op te laden bij aangenamer weer. Dit patroon blijft grotendeels consistent in de zomer, met een merkbare daling in de winter.
