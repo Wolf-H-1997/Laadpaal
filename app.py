@@ -62,7 +62,7 @@ def main():
         st.markdown("""
         In dit gedeelte bespreken we het datamodeling-proces en de aanpassingen die zijn aangebracht aan de originele dataset. We hebben nieuwe kolommen toegevoegd en de dataset verrijkt met aanvullende informatie. Hier zijn enkele van de belangrijkste wijzigingen:""")
 
-        df= pd.read_csv('allelaadpale')
+        df= pd.read_csv('allelaadpalen')
         st.dataframe(df.head())
 
         st.markdown("""
