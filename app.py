@@ -401,7 +401,7 @@ def main():
         st.pyplot(fig)
         st.divider()
         st.markdown('### Prophet voorspel model')
-        st.markdown(" In het Prophet model zie je goed dat er een sterke trend omhoog is.  Ook zie je cyclische patronen zowel per week als per dag. 
+        st.markdown(" In het Prophet model zie je goed dat er een sterke trend omhoog is.  Ook zie je cyclische patronen zowel per week als per dag.")
         df_prophet = pw_dag.reset_index()
         df_prophet.rename(columns={'start' : 'ds', 'v' : 'y'}, inplace =True)
         df_prophet = df_prophet.dropna()
