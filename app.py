@@ -83,8 +83,13 @@ def main():
         st.markdown("Op deze pagina gaan we de aangepaste dataset bekijken en analyseren. Hieronder ziet u een aantal plots. Elke plot is bedoeld om de tijdreeksgegevens van een specifieke sensor weer te geven op basis van de opgegeven laadpaal. Op elke plot bevat de naam van de sensor en de x-as is gelabeld als 'Index' en de y-as als 'Sensor Waarde'. ")
 
         #PLOT 1
-        data = pd.read_pickle('231113_Raw_data.pkl')
-
+        #data = pd.read_pickle('231113_Raw_data.pkl')
+        image_path1 = 'image1.png'
+        image_path2 = 'image2.png'
+        image_path3 = 'image3.png'
+        image_path4 = 'image4.png'
+        image_path5 = 'image5.png'
+        
         laadpalen = ['ams-a-chrg-0-0-', 'ams-a-chrg-0-1-', 'ams-a-chrg-1-0-', 'ams-a-chrg-1-1-',
                 'ams-a-chrg-2-0-', 'ams-a-chrg-2-1-', 'ams-a-chrg-3-0-', 'ams-a-chrg-3-1-',
                 'ams-a-chrg-4-0-', 'ams-a-chrg-4-1-', 'ams-a-chrg-5-0-', 'ams-a-chrg-5-1-',
@@ -129,22 +134,13 @@ def main():
         laadpalen = [laadpaal_1, laadpaal_2, laadpaal_3, laadpaal_4, laadpaal_5, laadpaal_6, laadpaal_7, laadpaal_8, laadpaal_9, laadpaal_10 , laadpaal_11, laadpaal_12, laadpaal_13, laadpaal_14, laadpaal_15, laadpaal_16]
         sensoren = [active_power, real_energy, L1_W, L1_A, L1_V, L2_W, L2_A, L2_V, L3_W, L3_A, L3_V, max_applied, max_charging, phase, charging, connected ]
 
-        fig, axes = plt.subplots(nrows=len(sensoren), ncols=1, figsize=(10, 4 * len(sensoren)))
+       image1 = st.image(image_path1, caption='3PhaseActivePowW', use_column_width=True)
+       image2 = st.image(image_path2, caption = '3PhaseRealEnergyDeliveredWh', use_column_width = True)
+       image3 = st.image(image_path3, caption='Voltage', use_column_width=True)
+       image4 = st.image(image_path4, caption='Applied Ampere', use_column_width=True)
+       image5 = st.image(image_path5, caption='Connected/Charging', use_column_width=True)
+   
 
-        # Itereer over sensoren
-        for i, sensor in enumerate(sensoren):
-        # Filter data voor de huidige sensor en laadpaal
-            test = data[data['sensor'] == laadpalen[0] + sensor]
-            testdag1 = test[(test['day'].isin([27, 28, 29])) & (test['month'] == 4)]
-
-        # Plot op het overeenkomstige subplot
-            axes[i].plot(testdag1.index, testdag1['v'])
-            axes[i].set_title(f'Sensor {sensor}')
-            axes[i].set_xlabel('Index')
-            axes[i].set_ylabel('Sensor Waarde')
-
-        plt.tight_layout()
-        st.pyplot(fig)
 
         st.markdown("""
         **Analyse van Sensoren**
