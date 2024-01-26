@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import plotly.express as px
+from IPython.display import Image
+from PIL import Image
 import plotly.express as px
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
@@ -22,7 +24,7 @@ import pmdarima as pm
 
 def main():
 
-    menu_options = ["Dataset", "Data modeling", "Data verkenning", "Profielen", "Voorspelling","Conclusie"]
+    menu_options = ["Dataset", "Data modeling", "Data verkenning", "Profielen","Tijdreeks", "Voorspelling","Conclusie"]
     
     choice = st.sidebar.selectbox("Menu", menu_options)
 
@@ -247,7 +249,41 @@ def main():
         plt.xticks(rotation =45)
         plt.ylabel('laadsessies')
         st.pyplot(plt)
+    if choice == "Tijdreeks":
+        dff = pd.read_csv('pw_uur')
+        dff.set_index('start', inplace=True)
+        dff.index = pd.to_datetime(dff.index)
+        dff['day_of_week'] = dff.index.dayofweek
 
+        # Define the days of the week
+        days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+        
+        st.title("Average Total Active Power with Rolling Average")
+
+        
+        for day in days_of_week:
+            day_data = dff[dff.index.day_name() == day]
+
+            aggregated_data = day_data.groupby(day_data.index.time)['v'].mean()
+            aggregated_data.index = aggregated_data.index.map(lambda x: x.strftime('%H:%M:%S'))
+
+            rolling_avg = aggregated_data.rolling(window=5).mean()
+
+            # Plotting
+            st.subheader(f'Average Total Active Power on {day} with Rolling Average')
+            fig, ax = plt.subplots(figsize=(12, 6))
+            ax.plot(aggregated_data.index, aggregated_data.values, marker='o', linestyle='-', color='b', label='Original Data')
+            ax.plot(rolling_avg.index, rolling_avg.values, linestyle='--', color='r', label='Rolling Average')
+            ax.set_xticks(range(0, len(dff), 5))
+            ax.set_xticklabels(dff.index[::5], rotation=45, ha='right')
+            ax.set_xlabel('Time of Day')
+            ax.set_ylabel('Total Active Power (Watt)')
+            ax.legend()
+            ax.grid(True)
+            
+            
+            st.pyplot(fig)
 
        
     
