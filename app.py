@@ -252,10 +252,10 @@ def main():
         st.pyplot(plt)
     if choice == "Tijdreeks":
         st.markdown(“””
- 
-De tijdreeksanalyse laat zien dat bepaalde dagen erg druk zijn voor het laden van elektrische voertuigen: dinsdag, vrijdag en zaterdag. Mensen lijken vooral op deze dagen veel gebruik te maken van laadpunten. Dit inzicht helpt bij het plannen van middelen op momenten wanneer het meest nodig is. Bij het onderdeel dataverkenning is te zien dat een aantal laadpalen en meest worden gebruikt namelijk: laadpaal 13,15 en laadpaal 16. Dit heeft te maken met de plaatsing van de laadpalen. Laadpaal 16 zit het dichtste bij de ingang en laadpaal 1 het verste. Dit zorgt ervoor dat een aantal laadpalen meer wordt gebruikt dan anderen.
- 
-“””)
+         
+        De tijdreeksanalyse laat zien dat bepaalde dagen erg druk zijn voor het laden van elektrische voertuigen: dinsdag, vrijdag en zaterdag. Mensen lijken vooral op deze dagen veel gebruik te maken van laadpunten. Dit inzicht helpt bij het plannen van middelen op momenten wanneer het meest nodig is. Bij het onderdeel dataverkenning is te zien dat een aantal laadpalen en meest worden gebruikt namelijk: laadpaal 13,15 en laadpaal 16. Dit heeft te maken met de plaatsing van de laadpalen. Laadpaal 16 zit het dichtste bij de ingang en laadpaal 1 het verste. Dit zorgt ervoor dat een aantal laadpalen meer wordt gebruikt dan anderen.
+         
+        “””)
         dff = pd.read_csv('pw_uur')
         dff.set_index('start', inplace=True)
         dff.index = pd.to_datetime(dff.index)
