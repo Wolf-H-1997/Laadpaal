@@ -27,7 +27,7 @@ from sklearn.metrics import silhouette_score
 
 def main():
 
-    menu_options = ["Dataset", "Data modeling", "Data verkenning", "Profielen","Tijdreeks", "Clusteren","Voorspelling","Conclusie"]
+    menu_options = ["Dataset", "Data modeling", "Data verkenning", "Profielen","Tijdreeks", "Clusteren","Voorspelling"]
     
     choice = st.sidebar.selectbox("Menu", menu_options)
 
