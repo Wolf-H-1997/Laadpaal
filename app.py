@@ -250,6 +250,16 @@ def main():
         plt.xticks(rotation =45)
         plt.ylabel('laadsessies')
         st.pyplot(plt)
+
+        df_3 = df[['VehicleCharging', 'VehicleConnected', 'Connected_without_charging', 'type']]
+        counts = df_3.groupby('type').sum().reset_index()
+        st.title('Laadgedrag per laadpaal')
+        fig, ax = plt.subplots(figsize=(10, 6))
+        counts.plot(kind='bar', stacked=True, x='type', ax=ax)
+        plt.title('Aantal gevallen per laadpaal')
+        plt.xlabel('Laadpaal')
+        plt.ylabel('Aantal gevallen')
+        st.pyplot(fig)
     if choice == "Tijdreeks":
         st.markdown("""
         # Allereerst worden de kolommen van interesse geselecteerd uit de dataset 'Start Time' en '3PhaseActivePowW'. 
