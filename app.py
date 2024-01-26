@@ -194,7 +194,7 @@ def main():
         st.plotly_chart(fig)
         
         #PLOT 3
-        st.title('Interactive Scatter Plot')
+        st.title('Interactieve Scatter Plots')
 
         # Create a scatter plot with dropdown menu for variable selection
         fig = px.scatter(df, x='Start Time', y='3PhaseActivePowW', color='type',
@@ -220,7 +220,7 @@ def main():
         #PLOT4
        
         fig = px.scatter(df, x='Start Time', y='L1CurrentA', color='type',
-                         title='Scatter Plot')
+                         title='Scatterplot van de Ampere waardes')
 
         fig.update_layout(
             updatemenus=[
