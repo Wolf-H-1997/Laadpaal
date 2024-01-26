@@ -446,7 +446,19 @@ def main():
 
         label_encoder_charging_period = LabelEncoder()
         df_1['ChargingPeriod'] = label_encoder_charging_period.fit_transform(df_1['ChargingPeriod'])
-
+        st.markdown("""
+        # Allereerst worden de kolommen van interesse geselecteerd uit de dataset, waaronder 'ChargingPeriod', 'Start Time' en '3PhaseActivePowW'. 
+        De 'Start Time' wordt ingesteld als de index van de geselecteerde data. Vervolgens wordt een constante waarde toegevoegd aan de '3PhaseActivePowW' kolom om negatieve waarden te voorkomen, 
+        en de data wordt gelogaritmeerd met behulp van de logaritmische functie. 
+        Daarna wordt de data geschaald met behulp van de StandardScaler om ervoor te zorgen dat alle variabelen vergelijkbare schalen hebben.
+        
+        Het K-means clustering algoritme wordt toegepast op de geschaalde data om clusters van vergelijkbare laadsessies te creëren. 
+        Het aantal clusters is vooraf ingesteld op drie. Vervolgens worden de laadsessies geplot in een scatterplot, waarbij elke cluster een andere kleur heeft. 
+        Dit helpt bij het visualiseren van de verschillende laadpatronen binnen de dataset.
+        
+        De silhouet score wordt berekend als een maatstaf voor de kwaliteit van de clustering. Een score dicht bij 1 duidt op een goede clustering, 
+        terwijl een score dicht bij -1 wijst op slechte clustering. In dit geval is de silhouet score 0.7278, wat aangeeft dat de clustering redelijk goed is en dat de clusters onderscheidend zijn van elkaar.
+        """)
         # Elbow Method for Optimal Number of Clusters
         k_values_elbow = (1, 10)
         sum_of_squared_distances = []
@@ -465,9 +477,9 @@ def main():
 
         st.title('Elbow Method for Optimal Number of Clusters')
         st.line_chart(pd.DataFrame({'k': k_range_elbow, 'Sum of Squared Distances': sum_of_squared_distances}).set_index('k'))
-
+        st.write('optimale clusters = 3')
         # Time Series Clustering plot
-        st.title('Time Series Clustering of ChargingPeriod (with Log of 3PhaseActivePowW)')
+        st.title('Clustering of ChargingPeriod (with Log of 3PhaseActivePowW*1e-4)')
 
         # Define columns of interest
         columns_of_interest = ['ChargingPeriod', 'Start Time', '3PhaseActivePowW']
@@ -511,19 +523,7 @@ def main():
         X = selected_data.drop('Cluster', axis=1)
         silhouette_avg = silhouette_score(X, selected_data['Cluster'])
         st.write(f"Silhouette Score: {silhouette_avg}")
-        st.markdown("""
-        # Allereerst worden de kolommen van interesse geselecteerd uit de dataset, waaronder 'ChargingPeriod', 'Start Time' en '3PhaseActivePowW'. 
-        De 'Start Time' wordt ingesteld als de index van de geselecteerde data. Vervolgens wordt een constante waarde toegevoegd aan de '3PhaseActivePowW' kolom om negatieve waarden te voorkomen, 
-        en de data wordt gelogaritmeerd met behulp van de logaritmische functie. 
-        Daarna wordt de data geschaald met behulp van de StandardScaler om ervoor te zorgen dat alle variabelen vergelijkbare schalen hebben.
         
-        Het K-means clustering algoritme wordt toegepast op de geschaalde data om clusters van vergelijkbare laadsessies te creëren. 
-        Het aantal clusters is vooraf ingesteld op drie. Vervolgens worden de laadsessies geplot in een scatterplot, waarbij elke cluster een andere kleur heeft. 
-        Dit helpt bij het visualiseren van de verschillende laadpatronen binnen de dataset.
-        
-        De silhouet score wordt berekend als een maatstaf voor de kwaliteit van de clustering. Een score dicht bij 1 duidt op een goede clustering, 
-        terwijl een score dicht bij -1 wijst op slechte clustering. In dit geval is de silhouet score 0.7278, wat aangeeft dat de clustering redelijk goed is en dat de clusters onderscheidend zijn van elkaar.
-        """)
     #PAGINA 6 CONCLUSIE
     if choice == "Conclusie":
         st.title("Conclusie")
