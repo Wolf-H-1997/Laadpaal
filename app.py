@@ -252,10 +252,9 @@ def main():
         st.pyplot(plt)
     if choice == "Tijdreeks":
         st.markdown("""
-        # Allereerst worden de kolommen van interesse geselecteerd uit de dataset, waaronder 'ChargingPeriod', 'Start Time' en '3PhaseActivePowW'. 
-        De 'Start Time' wordt ingesteld als de index van de geselecteerde data. Vervolgens wordt een constante waarde toegevoegd aan de '3PhaseActivePowW' kolom om negatieve waarden te voorkomen, 
-        en de data wordt gelogaritmeerd met behulp van de logaritmische functie. 
-        Daarna wordt de data geschaald met behulp van de StandardScaler om ervoor te zorgen dat alle variabelen vergelijkbare schalen hebben.
+        # Allereerst worden de kolommen van interesse geselecteerd uit de dataset 'Start Time' en '3PhaseActivePowW'. 
+        De 'Start Time' wordt ingesteld als de index van de geselecteerde data. Voor de tijdreeks wordt er gekeken naar de geleverde powerwat per dag. Van de dagen wordt het gemiddelde genomen van alle afgelopen dagen in de 7 maanden. 
+        Uit de verkregen plots valt bij elke dag goed een ochtend en een avond rush te zien. 
         """)
         dff = pd.read_csv('pw_uur')
         dff.set_index('start', inplace=True)
@@ -297,7 +296,7 @@ def main():
     #PAGINA 5 VOORSPELLING
     if choice == "Voorspelling":
         st.title("Data voorspellen")
-        st.markdown("Hier een arima plot met blablaablaablaablaaaa")
+        st.markdown("Hier wordt een arima voorspellings model gebruikt om de groei van de geleverde power wat te voorspellen. In de eerste plot is er een "differance" genomen om er voor te zorgen dat de plot stationair is. Dit is nodig om een juiste voorspelling temaken.")
         pw_dag = pd.read_csv('pw_dag')
         pw_uur = pd.read_csv('pw_uur')
         pw_dag.set_index('start', inplace=True)
@@ -349,7 +348,7 @@ def main():
         st.pyplot(fig)
         st.divider()
         
-        st.markdown('Het auto arima model geeft Best model:  ARIMA(4,0,2)(2,0,1)[7]')
+        st.markdown('Hier wordt gebruik gemaakt van een auto arima model, dit model berekend zelf de juiste parameters. Het auto arima model geeft Best model:  ARIMA(4,0,2)(2,0,1)[7]')
         y = pw_dag_diff.sort_index()
 
         # Split the data into train and test data with a size of 0.8
@@ -402,6 +401,7 @@ def main():
         st.pyplot(fig)
         st.divider()
         st.markdown('### Prophet voorspel model')
+        st.markdown(" In het Prophet model zie je goed dat er een sterke trend omhoog is.  Ook zie je cyclische patronen zowel per week als per dag. 
         df_prophet = pw_dag.reset_index()
         df_prophet.rename(columns={'start' : 'ds', 'v' : 'y'}, inplace =True)
         df_prophet = df_prophet.dropna()
