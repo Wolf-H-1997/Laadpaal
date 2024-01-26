@@ -296,7 +296,7 @@ def main():
     #PAGINA 5 VOORSPELLING
     if choice == "Voorspelling":
         st.title("Data voorspellen")
-        st.markdown("Hier wordt een arima voorspellings model gebruikt om de groei van de geleverde power wat te voorspellen. In de eerste plot is er een "differance" genomen om er voor te zorgen dat de plot stationair is. Dit is nodig om een juiste voorspelling temaken.")
+        st.markdown("Hier wordt een arima voorspellings model gebruikt om de groei van de geleverde power wat te voorspellen. In de eerste plot is er een differance genomen om er voor te zorgen dat de plot stationair is. Dit is nodig om een juiste voorspelling temaken.")
         pw_dag = pd.read_csv('pw_dag')
         pw_uur = pd.read_csv('pw_uur')
         pw_dag.set_index('start', inplace=True)
