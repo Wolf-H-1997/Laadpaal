@@ -16,13 +16,18 @@ from pmdarima import auto_arima
 from pmdarima.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 import pmdarima as pm
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import silhouette_score
+
+
+
 
 
 
 
 def main():
 
-    menu_options = ["Dataset", "Data modeling", "Data verkenning", "Profielen","Tijdreeks", "Voorspelling","Conclusie"]
+    menu_options = ["Dataset", "Data modeling", "Data verkenning", "Profielen","Tijdreeks", "Clusteren","Voorspelling","Conclusie"]
     
     choice = st.sidebar.selectbox("Menu", menu_options)
 
@@ -425,6 +430,83 @@ def main():
         st.pyplot(fig)
         fig3 = model.plot_components(forecast)
         st.pyplot(fig3)
+        
+        
+    if choice == "Clusteren":
+        df_1 = pd.read_csv('allelaadpalen')
+        # Use LabelEncoder to assign integers based on counts
+        label_encoder_charging_period = LabelEncoder()
+        df_1['Day'] = label_encoder_charging_period.fit_transform(df_1['Day'])
+
+        label_encoder_charging_period = LabelEncoder()
+        df_1['ChargingPeriod'] = label_encoder_charging_period.fit_transform(df_1['ChargingPeriod'])
+
+        # Elbow Method for Optimal Number of Clusters
+        k_values_elbow = (1, 10)
+        sum_of_squared_distances = []
+        k_range_elbow = range(k_values_elbow[0], k_values_elbow[1] + 1)
+
+        features_elbow = df_1[['ChargingPeriod', 'Start Time', '3PhaseActivePowW']]
+        features_elbow.set_index('Start Time', inplace=True)
+
+        scaler_elbow = StandardScaler()
+        scaled_features_elbow = scaler_elbow.fit_transform(features_elbow)
+
+        for k in k_range_elbow:
+            kmeans = KMeans(n_clusters=k, random_state=42)
+            kmeans.fit(scaled_features_elbow)
+            sum_of_squared_distances.append(kmeans.inertia_)
+
+        st.title('Elbow Method for Optimal Number of Clusters')
+        st.line_chart(pd.DataFrame({'k': k_range_elbow, 'Sum of Squared Distances': sum_of_squared_distances}).set_index('k'))
+
+        # Time Series Clustering plot
+        st.title('Time Series Clustering of ChargingPeriod (with Log of 3PhaseActivePowW)')
+
+        # Define columns of interest
+        columns_of_interest = ['ChargingPeriod', 'Start Time', '3PhaseActivePowW']
+
+        # Extract relevant features for clustering
+        selected_data = df_1[columns_of_interest]
+        selected_data.set_index('Start Time', inplace=True)
+
+        # Apply log transformation to '3PhaseActivePowW'
+        constant_value = 1e-4
+        selected_data['3PhaseActivePowW'] = np.log10(selected_data['3PhaseActivePowW'] + constant_value).replace(0, 1)
+
+        # Scale and normalize the data
+        scaler = StandardScaler()
+        scaled_data = scaler.fit_transform(selected_data)
+
+        # Perform KMeans clustering (3 clusters)
+        num_clusters = 3
+        kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+        selected_data['Cluster'] = kmeans.fit_predict(scaled_data)
+        x_min = selected_data['ChargingPeriod'].min()
+        x_max = selected_data['ChargingPeriod'].max()
+        y_min = selected_data['3PhaseActivePowW'].min()
+        y_max = selected_data['3PhaseActivePowW'].max()
+
+        # Display clusters using Streamlit chart
+        for cluster in range(num_clusters):
+            cluster_data = selected_data[selected_data['Cluster'] == cluster]
+            plt.scatter(cluster_data['ChargingPeriod'], cluster_data['3PhaseActivePowW'], label=f'Cluster {cluster + 1}')
+        plt.xlim(x_min-1, x_max+1)
+        plt.ylim(y_min-1, y_max+1)
+        plt.xlabel('CharginPeriod')
+        plt.ylabel('3PhaseActivePowW')
+        plt.title('Time Series Clustering of ChargingPeriod (with Log of 3PhaseActivePowW)')
+        plt.legend()
+        # Display the plot using st.pyplot()
+        st.pyplot(plt)
+        st.divider()
+       
+        # Compute silhouette score
+        X = selected_data.drop('Cluster', axis=1)
+        silhouette_avg = silhouette_score(X, selected_data['Cluster'])
+        st.write(f"Silhouette Score: {silhouette_avg}")
+
+        
     #PAGINA 6 CONCLUSIE
     if choice == "Conclusie":
         st.title("Conclusie")
