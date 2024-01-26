@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import plotly.express as px
+from IPython.display import Image
+from PIL import Image
 import plotly.express as px
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
@@ -273,8 +275,7 @@ def main():
             fig, ax = plt.subplots(figsize=(12, 6))
             ax.plot(aggregated_data.index, aggregated_data.values, marker='o', linestyle='-', color='b', label='Original Data')
             ax.plot(rolling_avg.index, rolling_avg.values, linestyle='--', color='r', label='Rolling Average')
-            ax.set_xticks(range(0, len(dff), 5))
-            ax.set_xticklabels(dff.index[::5], rotation=45, ha='right')
+            plt.xticks(aggregated_data.index[::10])
             ax.set_xlabel('Time of Day')
             ax.set_ylabel('Total Active Power (Watt)')
             ax.legend()
@@ -423,9 +424,10 @@ def main():
 
         forecast = model.predict(future)
         fig = model.plot(forecast)
+        st.markdown('# Nu per uur')
+
         st.pyplot(fig)
         fig3 = model.plot_components(forecast)
-        st.markdown('# Nu per uur')
         st.pyplot(fig3)
     #PAGINA 6 CONCLUSIE
     if choice == "Conclusie":
