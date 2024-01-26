@@ -523,11 +523,18 @@ def main():
         X = selected_data.drop('Cluster', axis=1)
         silhouette_avg = silhouette_score(X, selected_data['Cluster'])
         st.write(f"Silhouette Score: {silhouette_avg}")
+        st.markdown("""
+        De plot toont drie duidelijke clusters. Op de horizontale as staat de 'Charging Period', wat staat voor het het dagdeel dat er geladen wordt, terrwijl de verticale as de '3PhaseActivePowW' vertegenwoordigt, de actieve vermogensmeting van het laadproces.
         
-    #PAGINA 6 CONCLUSIE
-    if choice == "Conclusie":
-        st.title("Conclusie")
-        st.markdown("xx")
+        Er zijn twee clusters boven links en rechts waar de waardes variëren van de ActivePowW tussen de 2 en 6, wat aangeeft dat er veel geladen wordt. In cluster 3, heb je lagere laadsessies verdeeld over de dagdelen.
+        
+        Cluster 1 en 2 staan voor de ochtend en avond spits terwijl cluster 3 waarsschijnlijk een aparte categorie van laadsessie is met mogelijk inactieve of minder intensieve laadsessies.
+        
+        
+        In essentie onthult de plot verschillende laadgedragspatronen binnen de dataset, waarbij cluster 1 en cluster 2 opvallende kenmerken vertonen bij verschillende laadduur-waarden, terwijl cluster 1 een meer verspreide en mogelijk minder uniforme set van laadsessies vertegenwoordigt.
+        """)
+
+    
 
 if __name__ == "__main__":
     main()
