@@ -273,7 +273,7 @@ def main():
             fig, ax = plt.subplots(figsize=(12, 6))
             ax.plot(aggregated_data.index, aggregated_data.values, marker='o', linestyle='-', color='b', label='Original Data')
             ax.plot(rolling_avg.index, rolling_avg.values, linestyle='--', color='r', label='Rolling Average')
-            plt.xticks(aggregated_data.index[::10])
+            plt.xticks(aggregated_data.index[::5])
             ax.set_xlabel('Time of Day')
             ax.set_ylabel('Total Active Power (Watt)')
             ax.legend()
