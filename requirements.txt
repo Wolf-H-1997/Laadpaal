@@ -9,5 +9,6 @@ scipy==1.10.1
 seaborn 
 statsmodels==0.14.1
 streamlit==1.27.0
+holidays==0.24
 
 
