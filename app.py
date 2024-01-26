@@ -84,11 +84,11 @@ def main():
 
         #PLOT 1
         #data = pd.read_pickle('231113_Raw_data.pkl')
-        image_path1 = 'image1.png'
-        image_path2 = 'image2.png'
-        image_path3 = 'image3.png'
-        image_path4 = 'image4.png'
-        image_path5 = 'image5.png'
+        image_path1 = 'image1.jpg'
+        image_path2 = 'image2.jpg'
+        image_path3 = 'image3.jpg'
+        image_path4 = 'image4.jpg'
+        image_path5 = 'image5.jpg'
         
         laadpalen = ['ams-a-chrg-0-0-', 'ams-a-chrg-0-1-', 'ams-a-chrg-1-0-', 'ams-a-chrg-1-1-',
                 'ams-a-chrg-2-0-', 'ams-a-chrg-2-1-', 'ams-a-chrg-3-0-', 'ams-a-chrg-3-1-',
