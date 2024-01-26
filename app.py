@@ -84,11 +84,11 @@ def main():
 
         #PLOT 1
         #data = pd.read_pickle('231113_Raw_data.pkl')
-        image_path1 = 'image1.jpg'
-        image_path2 = 'image2.jpg'
-        image_path3 = 'image3.jpg'
-        image_path4 = 'image4.jpg'
-        image_path5 = 'image5.jpg'
+        image_path1 = 'image1.png'
+        image_path2 = 'image2.png'
+        image_path3 = 'image3.png'
+        image_path4 = 'image4.png'
+        image_path5 = 'image5.png'
 
         # Display the images
         image1 = st.image(image_path1, caption='3PhaseActivePowW', use_column_width=True)
