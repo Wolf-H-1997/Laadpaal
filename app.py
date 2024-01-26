@@ -89,6 +89,14 @@ def main():
         image_path3 = 'image3.jpg'
         image_path4 = 'image4.jpg'
         image_path5 = 'image5.jpg'
+
+        # Display the images
+        image1 = st.image(image_path1, caption='3PhaseActivePowW', use_column_width=True)
+        image2 = st.image(image_path2, caption='3PhaseRealEnergyDeliveredWh', use_column_width=True)
+        image3 = st.image(image_path3, caption='Voltage', use_column_width=True)
+        image4 = st.image(image_path4, caption='Applied Ampere', use_column_width=True)
+        image5 = st.image(image_path5, caption='Connected/Charging', use_column_width=True)
+
         
         laadpalen = ['ams-a-chrg-0-0-', 'ams-a-chrg-0-1-', 'ams-a-chrg-1-0-', 'ams-a-chrg-1-1-',
                 'ams-a-chrg-2-0-', 'ams-a-chrg-2-1-', 'ams-a-chrg-3-0-', 'ams-a-chrg-3-1-',
@@ -134,13 +142,7 @@ def main():
         laadpalen = [laadpaal_1, laadpaal_2, laadpaal_3, laadpaal_4, laadpaal_5, laadpaal_6, laadpaal_7, laadpaal_8, laadpaal_9, laadpaal_10 , laadpaal_11, laadpaal_12, laadpaal_13, laadpaal_14, laadpaal_15, laadpaal_16]
         sensoren = [active_power, real_energy, L1_W, L1_A, L1_V, L2_W, L2_A, L2_V, L3_W, L3_A, L3_V, max_applied, max_charging, phase, charging, connected ]
 
-       image1 = st.image(image_path1, caption='3PhaseActivePowW', use_column_width=True)
-       image2 = st.image(image_path2, caption = '3PhaseRealEnergyDeliveredWh', use_column_width = True)
-       image3 = st.image(image_path3, caption='Voltage', use_column_width=True)
-       image4 = st.image(image_path4, caption='Applied Ampere', use_column_width=True)
-       image5 = st.image(image_path5, caption='Connected/Charging', use_column_width=True)
-   
-
+    
 
         st.markdown("""
         **Analyse van Sensoren**
