@@ -513,9 +513,8 @@ def main():
         plt.ylim(y_min-1, y_max+1)
         plt.xlabel('CharginPeriod')
         plt.ylabel('3PhaseActivePowW')
-        plt.title('Time Series Clustering of ChargingPeriod (with Log of 3PhaseActivePowW)')
+        plt.title('Clustering of ChargingPeriod (with Log of 3PhaseActivePowW)')
         plt.legend()
-        # Display the plot using st.pyplot()
         st.pyplot(plt)
         st.divider()
        
