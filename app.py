@@ -251,6 +251,11 @@ def main():
         plt.ylabel('laadsessies')
         st.pyplot(plt)
     if choice == "Tijdreeks":
+        st.markdown(“””
+ 
+De tijdreeksanalyse laat zien dat bepaalde dagen erg druk zijn voor het laden van elektrische voertuigen: dinsdag, vrijdag en zaterdag. Mensen lijken vooral op deze dagen veel gebruik te maken van laadpunten. Dit inzicht helpt bij het plannen van middelen op momenten wanneer het meest nodig is. Bij het onderdeel dataverkenning is te zien dat een aantal laadpalen en meest worden gebruikt namelijk: laadpaal 13,15 en laadpaal 16. Dit heeft te maken met de plaatsing van de laadpalen. Laadpaal 16 zit het dichtste bij de ingang en laadpaal 1 het verste. Dit zorgt ervoor dat een aantal laadpalen meer wordt gebruikt dan anderen.
+ 
+“””)
         dff = pd.read_csv('pw_uur')
         dff.set_index('start', inplace=True)
         dff.index = pd.to_datetime(dff.index)
@@ -505,7 +510,13 @@ def main():
         X = selected_data.drop('Cluster', axis=1)
         silhouette_avg = silhouette_score(X, selected_data['Cluster'])
         st.write(f"Silhouette Score: {silhouette_avg}")
-
+        st.markdown(“””
+         
+        Allereerst worden de kolommen van interesse geselecteerd uit de dataset, waaronder 'ChargingPeriod', 'Start Time' en '3PhaseActivePowW'. De 'Start Time' wordt ingesteld als de index van de geselecteerde data. Vervolgens wordt een constante waarde toegevoegd aan de '3PhaseActivePowW' kolom om negatieve waarden te voorkomen, en de data wordt gelogaritmeerd met behulp van de logaritmische functie. Daarna wordt de data geschaald met behulp van de StandardScaler om ervoor te zorgen dat alle variabelen vergelijkbare schalen hebben.
+        Het K-means clustering algoritme wordt toegepast op de geschaalde data om clusters van vergelijkbare laadsessies te creëren. Het aantal clusters is vooraf ingesteld op drie. Vervolgens worden de laadsessies geplot in een scatterplot, waarbij elke cluster een andere kleur heeft. Dit helpt bij het visualiseren van de verschillende laadpatronen binnen de dataset.
+        De silhouet score wordt berekend als een maatstaf voor de kwaliteit van de clustering. Een score dicht bij 1 duidt op een goede clustering, terwijl een score dicht bij -1 wijst op slechte clustering. In dit geval is de silhouet score 0.7278, wat aangeeft dat de clustering redelijk goed is en dat de clusters onderscheidend zijn van elkaar.
+         
+        “””)
         
     #PAGINA 6 CONCLUSIE
     if choice == "Conclusie":
